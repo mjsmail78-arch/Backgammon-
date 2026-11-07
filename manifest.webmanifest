@@ -1,0 +1,17 @@
+{
+  "name": "Captain Jacko's Backgammon",
+  "short_name": "Captain Jacko",
+  "description": "Backgammon with Captain Jacko's house rules.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "fullscreen",
+  "orientation": "landscape",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "icons": [
+    { "src": "images/app-icon-180.png", "sizes": "180x180", "type": "image/png", "purpose": "any" },
+    { "src": "images/app-icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "images/app-icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "images/app-icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
