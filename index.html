@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob: mediastream:; connect-src 'self' https://0.peerjs.com wss://0.peerjs.com; object-src 'none'; base-uri 'self'; form-action 'none'">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Captain Jacko's Backgammon</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="images/app-icon-180.png">
+<link rel="icon" type="image/png" sizes="192x192" href="images/app-icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Captain Jacko">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#000000">
+<link rel="preload" as="image" href="images/captain-jacko-cutout.png">
+<script src="js/sideways.js"></script>
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/splash.css">
+<link rel="stylesheet" href="css/game.css">
+<link rel="stylesheet" href="css/menu.css">
+<link rel="stylesheet" href="css/guide.css">
+<link rel="stylesheet" href="css/friend.css">
+<script src="js/lib/three.min.js" defer></script>
+<script src="js/store.js" defer></script>
+<script src="js/themes.js" defer></script>
+<script src="js/stage.js" defer></script>
+<script src="js/motion.js" defer></script>
+<script src="js/rules.js" defer></script>
+<script src="js/board.js" defer></script>
+<script src="js/checkers.js" defer></script>
+<script src="js/dice.js" defer></script>
+<script src="js/net.js" defer></script>
+<script src="js/brain.js" defer></script>
+<script src="js/ai.js" defer></script>
+<script src="js/splash.js" defer></script>
+<script src="js/topbar.js" defer></script>
+<script src="js/saves.js" defer></script>
+<script src="js/menu.js" defer></script>
+<script src="js/guide-book.js" defer></script>
+<script src="js/scrollbars.js" defer></script>
+<script src="js/lib/peerjs.min.js" defer></script>
+<script src="js/online.js" defer></script>
+<script src="js/friend.js" defer></script>
+<script src="js/fireworks.js" defer></script>
+<script src="js/directions.js" defer></script>
+<script src="js/play.js" defer></script>
+<script src="js/replay.js" defer></script>
+<script src="js/install.js" defer></script>
+<script src="js/main.js" defer></script>
+</head>
+<body>
+
+  <div id="splash" aria-hidden="true">
+    <svg class="logo-plate" id="logo-plate" viewBox="0 0 400 400" aria-hidden="true">
+      <defs>
+        <linearGradient id="gold" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#fbe9a6"/>
+          <stop offset="0.45" stop-color="#d4a83a"/>
+          <stop offset="1" stop-color="#8a6417"/>
+        </linearGradient>
+        <path id="arc-top" d="M 60 200 A 140 140 0 0 1 340 200"/>
+        <path id="arc-bottom" d="M 35 200 A 165 165 0 0 0 365 200"/>
+        <clipPath id="face"><circle cx="200" cy="200" r="104"/></clipPath>
+        <linearGradient id="shirt" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#f3f2ef" stop-opacity="0"/>
+          <stop offset="0.3" stop-color="#f3f2ef"/>
+        </linearGradient>
+        <filter id="streak"><feGaussianBlur stdDeviation="1.5 0"/></filter>
+        <filter id="feather" x="-5%" y="-5%" width="110%" height="110%">
+          <feGaussianBlur in="SourceAlpha" stdDeviation="2.2" result="soft"/>
+          <feComposite in="SourceGraphic" in2="soft" operator="in"/>
+        </filter>
+      </defs>
+      <circle cx="200" cy="200" r="190" fill="#0d2238" stroke="url(#gold)" stroke-width="8"/>
+      <circle cx="200" cy="200" r="178" fill="none" stroke="#e8c770" stroke-width="3" stroke-dasharray="7 5"/>
+      <circle cx="200" cy="200" r="114" fill="none" stroke="#e8c770" stroke-width="3" stroke-dasharray="7 5"/>
+      <circle cx="200" cy="200" r="104" fill="#000" stroke="none"/>
+      <rect x="96" y="268" width="208" height="36" fill="url(#shirt)" clip-path="url(#face)"/>
+      <g clip-path="url(#face)">
+        <svg x="117.4" y="284" width="177" height="20" viewBox="0 148.6 150 1" preserveAspectRatio="none" overflow="hidden">
+          <image href="images/captain-jacko-cutout.png" width="150" height="150" filter="url(#streak)"/>
+        </svg>
+      </g>
+      <image href="images/captain-jacko-cutout.png" x="117.4" y="110.9" width="177" height="177"
+             clip-path="url(#face)" filter="url(#feather)"/>
+      <circle cx="200" cy="200" r="106" fill="none" stroke="url(#gold)" stroke-width="7"/>
+      <text class="word" dx="2"><textPath href="#arc-top" startOffset="50%" text-anchor="middle">CAPTAIN JACKO</textPath></text>
+      <text class="word" dx="2"><textPath href="#arc-bottom" startOffset="50%" text-anchor="middle">BACKGAMMON</textPath></text>
+      <text class="star" x="34" y="208">★</text>
+      <text class="star" x="352" y="208">★</text>
+    </svg>
+    <div class="loading-sign"><span>LOADING</span></div>
+  </div>
+
+  <div id="game" class="bg-p-gb">
+
+    <div id="scenery-old" aria-hidden="true"></div>
+    <div id="scenery-dim" aria-hidden="true"></div>
+
+    <header id="topbar">
+      <div class="tb-group">
+      <button type="button" id="btn-hints" class="ico-btn" aria-label="Hints" title="Hints" aria-pressed="true">
+        <svg viewBox="0 0 24 24"><path d="M8.6 9a3.5 3.5 0 1 1 5.2 3.1c-1.1.6-1.8 1.4-1.8 2.6v.6"/><circle cx="12" cy="18.6" r="1.1" class="dot"/><path class="slash" d="M4.5 19.5l15-15"/></svg>
+      </button>
+      <button type="button" id="btn-settings" class="ico-btn" aria-label="Settings" title="Settings">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1"/><circle cx="12" cy="12" r="6.5"/></svg>
+      </button>
+      <button type="button" id="btn-graphics" class="ico-btn" aria-label="Graphics" title="Graphics">
+        <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12.5" rx="2"/><path d="M6.5 13.5l3.6-4 2.6 2.8 1.6-1.6 3.2 2.8"/><circle cx="15.8" cy="7.6" r="1" class="dot"/><path d="M9 20h6M12 16.5V20"/></svg>
+      </button>
+      </div>
+      <button type="button" id="btn-new" class="ico-btn" aria-label="New Game" title="New Game" aria-expanded="false" aria-controls="menu"></button>
+      <div class="tb-group">
+      <button type="button" id="btn-sound" class="ico-btn" aria-label="Sound" title="Sound">
+        <svg viewBox="0 0 24 24" class="snd-on"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/><path class="slash" d="M4.5 19.5l15-15"/></svg>
+      </button>
+      <button type="button" id="btn-view" class="ico-btn" aria-label="View" title="View">
+        <svg viewBox="0 0 24 24"><path d="M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>
+      </button>
+      <button type="button" id="btn-emojis" class="ico-btn" aria-label="Emojis" title="Emojis">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="9" cy="10" r="1" class="dot"/><circle cx="15" cy="10" r="1" class="dot"/><path d="M8 14.5c1 1.6 2.4 2.4 4 2.4s3-0.8 4-2.4"/></svg>
+      </button>
+      </div>
+    </header>
+
+    <div class="player-card p1" id="card-p1">
+      <button type="button" class="rp-key" id="rp-p1" aria-label="Replay Player 1's last turn">
+        <canvas class="portrait" id="portrait-p1" aria-hidden="true"></canvas>
+        <svg class="rp-ring" viewBox="0 0 100 100" aria-hidden="true"><path d="M50 10A40 40 0 1 1 15.4 30"/><path class="tip" d="M36 10L52 1V19Z"/></svg>
+        <svg class="rp-sign rp-pause" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="30"/><rect x="38" y="35" width="8" height="30" rx="2"/><rect x="54" y="35" width="8" height="30" rx="2"/></svg>
+        <svg class="rp-sign rp-play" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="30"/><path d="M42 34L66 50L42 66Z"/></svg>
+      </button>
+      <span class="who">
+        <span class="name" id="name-p1">Player 1</span>
+        <span class="pip" id="pip-p1"></span>
+      </span>
+      <span class="score" id="score-p1">0</span>
+    </div>
+    <div class="player-card p2" id="card-p2">
+      <button type="button" class="rp-key" id="rp-p2" aria-label="Replay Player 2's last turn">
+        <canvas class="portrait" id="portrait-p2" aria-hidden="true"></canvas>
+        <svg class="rp-ring" viewBox="0 0 100 100" aria-hidden="true"><g transform="matrix(-1 0 0 1 100 0)"><path d="M50 10A40 40 0 1 1 15.4 30"/><path class="tip" d="M36 10L52 1V19Z"/></g></svg>
+        <svg class="rp-sign rp-pause" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="30"/><rect x="38" y="35" width="8" height="30" rx="2"/><rect x="54" y="35" width="8" height="30" rx="2"/></svg>
+        <svg class="rp-sign rp-play" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="30"/><path d="M42 34L66 50L42 66Z"/></svg>
+      </button>
+      <span class="who">
+        <span class="name" id="name-p2">Player 2</span>
+        <span class="pip" id="pip-p2"></span>
+      </span>
+      <span class="score" id="score-p2">0</span>
+    </div>
+
+    <div id="caption" class="caption" aria-live="polite">Press Roll to start.</div>
+
+    <main id="table" aria-label="Board"></main>
+    <div id="balloons"></div>
+
+    <nav id="playbar" aria-label="Play">
+      <button type="button" id="btn-undo" class="ico-btn play-btn off" aria-label="Undo" title="Undo" disabled>
+        <svg viewBox="0 0 24 24"><path d="M20 12H5"/><path d="M11 6l-6 6 6 6"/></svg>
+      </button>
+      <button type="button" id="btn-roll" class="ico-btn play-btn" aria-label="Roll" title="Roll">
+        <svg viewBox="0 0 30 24"><g transform="rotate(-12 7 13)"><rect x="2" y="8" width="10" height="10" rx="2.2"/><circle cx="4.6" cy="10.6" r="1" class="dot"/><circle cx="9.4" cy="15.4" r="1" class="dot"/></g><g transform="rotate(10 23 11)"><rect x="18" y="6" width="10" height="10" rx="2.2"/><circle cx="23" cy="11" r="1.2" class="dot"/></g></svg>
+      </button>
+      <button type="button" id="btn-confirm" class="ico-btn play-btn off" aria-label="Confirm" title="Confirm" disabled>
+        <svg viewBox="0 0 24 24"><path d="M4.5 12.5l5 5 10-11"/></svg>
+      </button>
+      <button type="button" id="btn-redo" class="ico-btn play-btn off" aria-label="Redo" title="Redo" disabled>
+        <svg viewBox="0 0 24 24"><path d="M4 12h15"/><path d="M13 6l6 6-6 6"/></svg>
+      </button>
+    </nav>
+
+    <button type="button" id="friend-plate" class="friend-plate" aria-label="Your friend online" hidden>
+      <svg class="logo-plate fp-plate" viewBox="0 0 400 400" aria-hidden="true">
+        <defs>
+          <linearGradient id="fp-gold" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#fbe9a6"/>
+            <stop offset="0.45" stop-color="#d4a83a"/>
+            <stop offset="1" stop-color="#8a6417"/>
+          </linearGradient>
+          <path id="fp-arc-top" d="M 60 200 A 140 140 0 0 1 340 200"/>
+          <path id="fp-arc-bottom" d="M 35 200 A 165 165 0 0 0 365 200"/>
+          <clipPath id="fp-face"><circle cx="200" cy="200" r="194"/></clipPath>
+        </defs>
+        <circle cx="200" cy="200" r="190" fill="#0d2238" stroke="url(#fp-gold)" stroke-width="8"/>
+        <circle cx="200" cy="200" r="178" fill="none" stroke="#e8c770" stroke-width="3" stroke-dasharray="7 5"/>
+        <circle cx="200" cy="200" r="114" fill="none" stroke="#e8c770" stroke-width="3" stroke-dasharray="7 5"/>
+        <circle cx="200" cy="200" r="104" fill="#000" stroke="none"/>
+        <text class="fp-letter" id="fp-letter" x="200" y="200" text-anchor="middle" dominant-baseline="central"></text>
+        <circle cx="200" cy="200" r="106" fill="none" stroke="url(#fp-gold)" stroke-width="7"/>
+        <text class="word" dx="2"><textPath href="#fp-arc-top" startOffset="50%" text-anchor="middle">FRIEND</textPath></text>
+        <text class="word" dx="2"><textPath href="#fp-arc-bottom" startOffset="50%" text-anchor="middle">ONLINE</textPath></text>
+        <text class="star" x="34" y="208">★</text>
+        <text class="star" x="352" y="208">★</text>
+        <image id="fp-photo" x="6" y="6" width="388" height="388" preserveAspectRatio="xMidYMid slice" clip-path="url(#fp-face)"/>
+      </svg>
+      <span class="fp-round"><video id="fp-round" autoplay playsinline muted></video></span>
+      <span class="fp-badge" id="fp-badge" aria-hidden="true" hidden></span>
+    </button>
+
+    <div id="fp-menu" class="fp-menu" hidden>
+      <button type="button" id="fp-call-btn">Video call</button>
+      <button type="button" id="fp-chat-btn">Chat</button>
+      <button type="button" id="fp-photo-btn">Add my photo</button>
+    </div>
+    <input type="file" id="fp-file" accept="image/*" hidden>
+
+    <div id="fp-call" class="fp-call" role="dialog" aria-label="Video call" hidden>
+      <video id="fp-them" class="fp-them" autoplay playsinline muted></video>
+      <video id="fp-me" class="fp-me" autoplay playsinline muted></video>
+      <audio id="fp-voice" autoplay></audio>
+      <div class="fp-call-head">
+        <div class="fp-call-line" id="fp-call-line"></div>
+      </div>
+      <div class="fp-call-row">
+        <button type="button" class="big-btn" id="fp-back">BACK TO GAME</button>
+        <button type="button" class="big-btn" id="fp-chat">CHAT</button>
+        <button type="button" class="big-btn fp-nudge" id="fp-nudge">NUDGE</button>
+        <button type="button" class="big-btn" id="fp-mute">MUTE</button>
+        <button type="button" class="big-btn fp-end" id="fp-end">END CALL</button>
+      </div>
+    </div>
+
+    <div id="round-pop" class="pop" hidden>
+      <div class="pop-title" id="round-title"></div>
+      <p class="pop-sub" id="round-text"></p>
+      <div class="round-score" id="round-score"></div>
+      <button type="button" class="primary" id="round-next">Next Round</button>
+    </div>
+
+    <div id="emoji-grid" class="pop" hidden>
+      <div class="emo-head" id="emo-used-head" hidden>MOST USED</div>
+      <div class="emo-used" id="emo-used"></div>
+      <div class="emo-head">FACES</div>
+      <button type="button" data-emo="facewithtearsofjoy" aria-label="Face with tears of joy"><img data-src="images/emoji/faces/facewithtearsofjoy.webp" data-yellow="images/emoji/faces/facewithtearsofjoy.webp" data-tone="images/emoji/faces-tone/{t}/facewithtearsofjoy.webp" alt=""></button>
+      <button type="button" data-emo="rollingonthefloorlaughing" aria-label="Rolling on the floor laughing"><img data-src="images/emoji/faces/rollingonthefloorlaughing.webp" data-yellow="images/emoji/faces/rollingonthefloorlaughing.webp" data-tone="images/emoji/faces-tone/{t}/rollingonthefloorlaughing.webp" alt=""></button>
+      <button type="button" data-emo="beamingfacewithsmilingeyes" aria-label="Beaming face with smiling eyes"><img data-src="images/emoji/faces/beamingfacewithsmilingeyes.webp" data-yellow="images/emoji/faces/beamingfacewithsmilingeyes.webp" data-tone="images/emoji/faces-tone/{t}/beamingfacewithsmilingeyes.webp" alt=""></button>
+      <button type="button" data-emo="grinningsquintingface" aria-label="Grinning squinting face"><img data-src="images/emoji/faces-2/grinningsquintingface.webp" data-yellow="images/emoji/faces-2/grinningsquintingface.webp" data-tone="images/emoji/faces-tone/{t}/grinningsquintingface.webp" alt=""></button>
+      <button type="button" data-emo="starstruck" aria-label="Star-struck"><img data-src="images/emoji/faces/starstruck.webp" data-yellow="images/emoji/faces/starstruck.webp" data-tone="images/emoji/faces-tone/{t}/starstruck.webp" alt=""></button>
+      <button type="button" data-emo="partyingface" aria-label="Partying face"><img data-src="images/emoji/faces/partyingface.webp" data-yellow="images/emoji/faces/partyingface.webp" data-tone="images/emoji/faces-tone/{t}/partyingface.webp" alt=""></button>
+      <button type="button" data-emo="smilingfacewithsunglasses" aria-label="Smiling face with sunglasses"><img data-src="images/emoji/faces/smilingfacewithsunglasses.webp" data-yellow="images/emoji/faces/smilingfacewithsunglasses.webp" data-tone="images/emoji/faces-tone/{t}/smilingfacewithsunglasses.webp" alt=""></button>
+      <button type="button" data-emo="smilingfacewithhalo" aria-label="Smiling face with halo"><img data-src="images/emoji/faces/smilingfacewithhalo.webp" data-yellow="images/emoji/faces/smilingfacewithhalo.webp" data-tone="images/emoji/faces-tone/{t}/smilingfacewithhalo.webp" alt=""></button>
+      <button type="button" data-emo="upsidedownface" aria-label="Upside-down face"><img data-src="images/emoji/faces/upsidedownface.webp" data-yellow="images/emoji/faces/upsidedownface.webp" data-tone="images/emoji/faces-tone/{t}/upsidedownface.webp" alt=""></button>
+      <button type="button" data-emo="winkingface" aria-label="Winking face"><img data-src="images/emoji/faces/winkingface.webp" data-yellow="images/emoji/faces/winkingface.webp" data-tone="images/emoji/faces-tone/{t}/winkingface.webp" alt=""></button>
+      <button type="button" data-emo="winkingfacewithtongue" aria-label="Winking face with tongue"><img data-src="images/emoji/faces/winkingfacewithtongue.webp" data-yellow="images/emoji/faces/winkingfacewithtongue.webp" data-tone="images/emoji/faces-tone/{t}/winkingfacewithtongue.webp" alt=""></button>
+      <button type="button" data-emo="facewithtongue" aria-label="Face with tongue"><img data-src="images/emoji/faces/facewithtongue.webp" data-yellow="images/emoji/faces/facewithtongue.webp" data-tone="images/emoji/faces-tone/{t}/facewithtongue.webp" alt=""></button>
+      <button type="button" data-emo="zanyface" aria-label="Zany face"><img data-src="images/emoji/faces/zanyface.webp" data-yellow="images/emoji/faces/zanyface.webp" data-tone="images/emoji/faces-tone/{t}/zanyface.webp" alt=""></button>
+      <button type="button" data-emo="smirkingface" aria-label="Smirking face"><img data-src="images/emoji/faces/smirkingface.webp" data-yellow="images/emoji/faces/smirkingface.webp" data-tone="images/emoji/faces-tone/{t}/smirkingface.webp" alt=""></button>
+      <button type="button" data-emo="lyingface" aria-label="Lying face"><img data-src="images/emoji/faces-2/lyingface.webp" data-yellow="images/emoji/faces-2/lyingface.webp" data-tone="images/emoji/faces-tone/{t}/lyingface.webp" alt=""></button>
+      <button type="button" data-emo="moneymouthface" aria-label="Money-mouth face"><img data-src="images/emoji/faces/moneymouthface.webp" data-yellow="images/emoji/faces/moneymouthface.webp" data-tone="images/emoji/faces-tone/{t}/moneymouthface.webp" alt=""></button>
+      <button type="button" data-emo="nerdface" aria-label="Nerd face"><img data-src="images/emoji/faces/nerdface.webp" data-yellow="images/emoji/faces/nerdface.webp" data-tone="images/emoji/faces-tone/{t}/nerdface.webp" alt=""></button>
+      <button type="button" data-emo="shushingface" aria-label="Shushing face"><img data-src="images/emoji/faces/shushingface.webp" data-yellow="images/emoji/faces/shushingface.webp" data-tone="images/emoji/faces-tone/{t}/shushingface.webp" alt=""></button>
+      <button type="button" data-emo="facewithhandovermouth" aria-label="Face with hand over mouth"><img data-src="images/emoji/faces/facewithhandovermouth.webp" data-yellow="images/emoji/faces/facewithhandovermouth.webp" data-tone="images/emoji/faces-tone/{t}/facewithhandovermouth.webp" alt=""></button>
+      <button type="button" data-emo="facewithopeneyesandhandovermouth" aria-label="Face with open eyes and hand over mouth"><img data-src="images/emoji/faces-2/facewithopeneyesandhandovermouth.webp" data-yellow="images/emoji/faces-2/facewithopeneyesandhandovermouth.webp" data-tone="images/emoji/faces-tone/{t}/facewithopeneyesandhandovermouth.webp" alt=""></button>
+      <button type="button" data-emo="zippermouthface" aria-label="Zipper-mouth face"><img data-src="images/emoji/faces/zippermouthface.webp" data-yellow="images/emoji/faces/zippermouthface.webp" data-tone="images/emoji/faces-tone/{t}/zippermouthface.webp" alt=""></button>
+      <button type="button" data-emo="smilingfacewithhearteyes" aria-label="Smiling face with heart-eyes"><img data-src="images/emoji/faces/smilingfacewithhearteyes.webp" data-yellow="images/emoji/faces/smilingfacewithhearteyes.webp" data-tone="images/emoji/faces-tone/{t}/smilingfacewithhearteyes.webp" alt=""></button>
+      <button type="button" data-emo="faceblowingakiss" aria-label="Face blowing a kiss"><img data-src="images/emoji/faces/faceblowingakiss.webp" data-yellow="images/emoji/faces/faceblowingakiss.webp" data-tone="images/emoji/faces-tone/{t}/faceblowingakiss.webp" alt=""></button>
+      <button type="button" data-emo="kissingface" aria-label="Kissing face"><img data-src="images/emoji/faces-2/kissingface.webp" data-yellow="images/emoji/faces-2/kissingface.webp" data-tone="images/emoji/faces-tone/{t}/kissingface.webp" alt=""></button>
+      <button type="button" data-emo="kissingfacewithclosedeyes" aria-label="Kissing face with closed eyes"><img data-src="images/emoji/faces-2/kissingfacewithclosedeyes.webp" data-yellow="images/emoji/faces-2/kissingfacewithclosedeyes.webp" data-tone="images/emoji/faces-tone/{t}/kissingfacewithclosedeyes.webp" alt=""></button>
+      <button type="button" data-emo="kissingfacewithsmilingeyes" aria-label="Kissing face with smiling eyes"><img data-src="images/emoji/faces-2/kissingfacewithsmilingeyes.webp" data-yellow="images/emoji/faces-2/kissingfacewithsmilingeyes.webp" data-tone="images/emoji/faces-tone/{t}/kissingfacewithsmilingeyes.webp" alt=""></button>
+      <button type="button" data-emo="huggingface" aria-label="Hugging face"><img data-src="images/emoji/faces-2/huggingface.webp" data-yellow="images/emoji/faces-2/huggingface.webp" data-tone="images/emoji/faces-tone/{t}/huggingface.webp" alt=""></button>
+      <button type="button" data-emo="thinkingface" aria-label="Thinking face"><img data-src="images/emoji/faces/thinkingface.webp" data-yellow="images/emoji/faces/thinkingface.webp" data-tone="images/emoji/faces-tone/{t}/thinkingface.webp" alt=""></button>
+      <button type="button" data-emo="facewithmonocle" aria-label="Face with monocle"><img data-src="images/emoji/faces/facewithmonocle.webp" data-yellow="images/emoji/faces/facewithmonocle.webp" data-tone="images/emoji/faces-tone/{t}/facewithmonocle.webp" alt=""></button>
+      <button type="button" data-emo="facewithraisedeyebrow" aria-label="Face with raised eyebrow"><img data-src="images/emoji/faces/facewithraisedeyebrow.webp" data-yellow="images/emoji/faces/facewithraisedeyebrow.webp" data-tone="images/emoji/faces-tone/{t}/facewithraisedeyebrow.webp" alt=""></button>
+      <button type="button" data-emo="facewithrollingeyes" aria-label="Face with rolling eyes"><img data-src="images/emoji/faces/facewithrollingeyes.webp" data-yellow="images/emoji/faces/facewithrollingeyes.webp" data-tone="images/emoji/faces-tone/{t}/facewithrollingeyes.webp" alt=""></button>
+      <button type="button" data-emo="unamusedface" aria-label="Unamused face"><img data-src="images/emoji/faces/unamusedface.webp" data-yellow="images/emoji/faces/unamusedface.webp" data-tone="images/emoji/faces-tone/{t}/unamusedface.webp" alt=""></button>
+      <button type="button" data-emo="headshakinghorizontally" aria-label="Head shaking horizontally"><img data-src="images/emoji/faces-2/headshakinghorizontally.webp" data-yellow="images/emoji/faces-2/headshakinghorizontally.webp" data-tone="images/emoji/faces-tone/{t}/headshakinghorizontally.webp" alt=""></button>
+      <button type="button" data-emo="headshakingvertically" aria-label="Head shaking vertically"><img data-src="images/emoji/faces-2/headshakingvertically.webp" data-yellow="images/emoji/faces-2/headshakingvertically.webp" data-tone="images/emoji/faces-tone/{t}/headshakingvertically.webp" alt=""></button>
+      <button type="button" data-emo="grimacingface" aria-label="Grimacing face"><img data-src="images/emoji/faces/grimacingface.webp" data-yellow="images/emoji/faces/grimacingface.webp" data-tone="images/emoji/faces-tone/{t}/grimacingface.webp" alt=""></button>
+      <button type="button" data-emo="facewithoutmouth" aria-label="Face without mouth"><img data-src="images/emoji/faces/facewithoutmouth.webp" data-yellow="images/emoji/faces/facewithoutmouth.webp" data-tone="images/emoji/faces-tone/{t}/facewithoutmouth.webp" alt=""></button>
+      <button type="button" data-emo="faceexhaling" aria-label="Face exhaling"><img data-src="images/emoji/faces/faceexhaling.webp" data-yellow="images/emoji/faces/faceexhaling.webp" data-tone="images/emoji/faces-tone/{t}/faceexhaling.webp" alt=""></button>
+      <button type="button" data-emo="yawningface" aria-label="Yawning face"><img data-src="images/emoji/faces/yawningface.webp" data-yellow="images/emoji/faces/yawningface.webp" data-tone="images/emoji/faces-tone/{t}/yawningface.webp" alt=""></button>
+      <button type="button" data-emo="sleepingface" aria-label="Sleeping face"><img data-src="images/emoji/faces/sleepingface.webp" data-yellow="images/emoji/faces/sleepingface.webp" data-tone="images/emoji/faces-tone/{t}/sleepingface.webp" alt=""></button>
+      <button type="button" data-emo="woozyface" aria-label="Woozy face"><img data-src="images/emoji/faces/woozyface.webp" data-yellow="images/emoji/faces/woozyface.webp" data-tone="images/emoji/faces-tone/{t}/woozyface.webp" alt=""></button>
+      <button type="button" data-emo="facewithspiraleyes" aria-label="Face with spiral eyes"><img data-src="images/emoji/faces/facewithspiraleyes.webp" data-yellow="images/emoji/faces/facewithspiraleyes.webp" data-tone="images/emoji/faces-tone/{t}/facewithspiraleyes.webp" alt=""></button>
+      <button type="button" data-emo="confusedface" aria-label="Confused face"><img data-src="images/emoji/faces/confusedface.webp" data-yellow="images/emoji/faces/confusedface.webp" data-tone="images/emoji/faces-tone/{t}/confusedface.webp" alt=""></button>
+      <button type="button" data-emo="worriedface" aria-label="Worried face"><img data-src="images/emoji/faces/worriedface.webp" data-yellow="images/emoji/faces/worriedface.webp" data-tone="images/emoji/faces-tone/{t}/worriedface.webp" alt=""></button>
+      <button type="button" data-emo="frowningface" aria-label="Frowning face"><img data-src="images/emoji/faces/frowningface.webp" data-yellow="images/emoji/faces/frowningface.webp" data-tone="images/emoji/faces-tone/{t}/frowningface.webp" alt=""></button>
+      <button type="button" data-emo="disappointedface" aria-label="Disappointed face"><img data-src="images/emoji/faces/disappointedface.webp" data-yellow="images/emoji/faces/disappointedface.webp" data-tone="images/emoji/faces-tone/{t}/disappointedface.webp" alt=""></button>
+      <button type="button" data-emo="pleadingface" aria-label="Pleading face"><img data-src="images/emoji/faces-2/pleadingface.webp" data-yellow="images/emoji/faces-2/pleadingface.webp" data-tone="images/emoji/faces-tone/{t}/pleadingface.webp" alt=""></button>
+      <button type="button" data-emo="cryingface" aria-label="Crying face"><img data-src="images/emoji/faces/cryingface.webp" data-yellow="images/emoji/faces/cryingface.webp" data-tone="images/emoji/faces-tone/{t}/cryingface.webp" alt=""></button>
+      <button type="button" data-emo="loudlycryingface" aria-label="Loudly crying face"><img data-src="images/emoji/faces/loudlycryingface.webp" data-yellow="images/emoji/faces/loudlycryingface.webp" data-tone="images/emoji/faces-tone/{t}/loudlycryingface.webp" alt=""></button>
+      <button type="button" data-emo="anguishedface" aria-label="Anguished face"><img data-src="images/emoji/faces/anguishedface.webp" data-yellow="images/emoji/faces/anguishedface.webp" data-tone="images/emoji/faces-tone/{t}/anguishedface.webp" alt=""></button>
+      <button type="button" data-emo="anxiousfacewithsweat" aria-label="Anxious face with sweat"><img data-src="images/emoji/faces/anxiousfacewithsweat.webp" data-yellow="images/emoji/faces/anxiousfacewithsweat.webp" data-tone="images/emoji/faces-tone/{t}/anxiousfacewithsweat.webp" alt=""></button>
+      <button type="button" data-emo="confoundedface" aria-label="Confounded face"><img data-src="images/emoji/faces/confoundedface.webp" data-yellow="images/emoji/faces/confoundedface.webp" data-tone="images/emoji/faces-tone/{t}/confoundedface.webp" alt=""></button>
+      <button type="button" data-emo="fearfulface" aria-label="Fearful face"><img data-src="images/emoji/faces/fearfulface.webp" data-yellow="images/emoji/faces/fearfulface.webp" data-tone="images/emoji/faces-tone/{t}/fearfulface.webp" alt=""></button>
+      <button type="button" data-emo="flushedface" aria-label="Flushed face"><img data-src="images/emoji/faces/flushedface.webp" data-yellow="images/emoji/faces/flushedface.webp" data-tone="images/emoji/faces-tone/{t}/flushedface.webp" alt=""></button>
+      <button type="button" data-emo="facewithopenmouth" aria-label="Face with open mouth"><img data-src="images/emoji/faces-2/facewithopenmouth.webp" data-yellow="images/emoji/faces-2/facewithopenmouth.webp" data-tone="images/emoji/faces-tone/{t}/facewithopenmouth.webp" alt=""></button>
+      <button type="button" data-emo="facewithsteamfromnose" aria-label="Face with steam from nose"><img data-src="images/emoji/faces/facewithsteamfromnose.webp" data-yellow="images/emoji/faces/facewithsteamfromnose.webp" data-tone="images/emoji/faces-tone/{t}/facewithsteamfromnose.webp" alt=""></button>
+      <button type="button" data-emo="angryface" aria-label="Angry face"><img data-src="images/emoji/faces/angryface.webp" data-yellow="images/emoji/faces/angryface.webp" data-tone="images/emoji/faces-tone/{t}/angryface.webp" alt=""></button>
+      <button type="button" data-emo="facescreaminginfear" aria-label="Face screaming in fear"><img data-src="images/emoji/faces/facescreaminginfear.webp" data-yellow="images/emoji/faces/facescreaminginfear.webp" data-tone="images/emoji/faces-tone/{t}/facescreaminginfear.webp" alt=""></button>
+      <button type="button" data-emo="explodinghead" aria-label="Exploding head"><img data-src="images/emoji/faces/explodinghead.webp" data-yellow="images/emoji/faces/explodinghead.webp" data-tone="images/emoji/faces-tone/{t}/explodinghead.webp" alt=""></button>
+      <button type="button" data-emo="facevomiting" aria-label="Face vomiting"><img data-src="images/emoji/faces/facevomiting.webp" data-yellow="images/emoji/faces/facevomiting.webp" data-tone="images/emoji/faces-tone/{t}/facevomiting.webp" alt=""></button>
+      <button type="button" class="emo-big" data-emo="chinflick" aria-label="Chin flick"><img data-src="images/emoji/hands-yellow/chinflick.webp" data-yellow="images/emoji/hands-yellow/chinflick.webp" data-tone="images/emoji/faces-tone/{t}/chinflick.webp" alt=""></button>
+      <button type="button" class="emo-big" data-emo="bastard" aria-label="Bastard"><img data-src="images/emoji/hands-yellow/bastard.webp" data-yellow="images/emoji/hands-yellow/bastard.webp" data-tone="images/emoji/faces-tone/{t}/bastard.webp" alt=""></button>
+      <button type="button" class="emo-big" data-emo="bitch" aria-label="Bitch"><img data-src="images/emoji/hands-yellow/bitch.webp" data-yellow="images/emoji/hands-yellow/bitch.webp" data-tone="images/emoji/faces-tone/{t}/bitch.webp" alt=""></button>
+      <button type="button" data-emo="smilingfacewithhorns" aria-label="Smiling face with horns"><img data-src="images/emoji/faces/smilingfacewithhorns.webp" alt=""></button>
+      <button type="button" data-emo="angryfacewithhorns" aria-label="Angry face with horns"><img data-src="images/emoji/faces/angryfacewithhorns.webp" alt=""></button>
+      <button type="button" data-emo="poutingface" aria-label="Pouting face"><img data-src="images/emoji/faces/poutingface.webp" alt=""></button>
+      <button type="button" data-emo="facewithsymbolsonmouth" aria-label="Face with symbols on mouth"><img data-src="images/emoji/faces/facewithsymbolsonmouth.webp" alt=""></button>
+      <div class="emo-head">HANDS</div>
+      <button type="button" data-emo="thumbsup" aria-label="Thumbs up"><img data-src="images/emoji/hands-yellow/thumbsup.webp" data-tone="images/emoji/hands-{t}/thumbsup.webp" alt=""></button>
+      <button type="button" data-emo="thumbsdown" aria-label="Thumbs down"><img data-src="images/emoji/hands-yellow/thumbsdown.webp" data-tone="images/emoji/hands-{t}/thumbsdown.webp" alt=""></button>
+      <button type="button" data-emo="clappinghands" aria-label="Clapping hands"><img data-src="images/emoji/hands-yellow/clappinghands.webp" data-tone="images/emoji/hands-{t}/clappinghands.webp" alt=""></button>
+      <button type="button" data-emo="wavinghand" aria-label="Waving hand"><img data-src="images/emoji/hands-yellow/wavinghand.webp" data-tone="images/emoji/hands-{t}/wavinghand.webp" alt=""></button>
+      <button type="button" data-emo="okhand" aria-label="Ok hand"><img data-src="images/emoji/hands-yellow/okhand.webp" data-tone="images/emoji/hands-{t}/okhand.webp" alt=""></button>
+      <button type="button" data-emo="asshole" aria-label="Asshole"><img data-src="images/emoji/hands-yellow/asshole.webp" data-tone="images/emoji/hands-{t}/asshole.webp" alt=""></button>
+      <button type="button" data-emo="victoryhand" aria-label="Victory hand"><img data-src="images/emoji/hands-yellow/victoryhand.webp" data-tone="images/emoji/hands-{t}/victoryhand.webp" alt=""></button>
+      <button type="button" data-emo="crossedfingers" aria-label="Crossed fingers"><img data-src="images/emoji/hands-yellow/crossedfingers.webp" data-tone="images/emoji/hands-{t}/crossedfingers.webp" alt=""></button>
+      <button type="button" data-emo="loveyougesture" aria-label="Love-you gesture"><img data-src="images/emoji/hands-yellow/loveyougesture.webp" data-tone="images/emoji/hands-{t}/loveyougesture.webp" alt=""></button>
+      <button type="button" data-emo="signofthehorns" aria-label="Sign of the horns"><img data-src="images/emoji/hands-yellow/signofthehorns.webp" data-tone="images/emoji/hands-{t}/signofthehorns.webp" alt=""></button>
+      <button type="button" data-emo="callmehand" aria-label="Call me hand"><img data-src="images/emoji/hands-yellow/callmehand.webp" data-tone="images/emoji/hands-{t}/callmehand.webp" alt=""></button>
+      <button type="button" data-emo="middlefinger" aria-label="Middle finger"><img data-src="images/emoji/hands-yellow/middlefinger.webp" data-tone="images/emoji/hands-{t}/middlefinger.webp" alt=""></button>
+      <button type="button" data-emo="oncomingfist" aria-label="Oncoming fist"><img data-src="images/emoji/hands-yellow/oncomingfist.webp" data-tone="images/emoji/hands-{t}/oncomingfist.webp" alt=""></button>
+      <button type="button" data-emo="leftfacingfist" aria-label="Left-facing fist"><img data-src="images/emoji/hands-yellow/leftfacingfist.webp" data-tone="images/emoji/hands-{t}/leftfacingfist.webp" alt=""></button>
+      <button type="button" data-emo="rightfacingfist" aria-label="Right-facing fist"><img data-src="images/emoji/hands-yellow/rightfacingfist.webp" data-tone="images/emoji/hands-{t}/rightfacingfist.webp" alt=""></button>
+      <button type="button" data-emo="raisedhand" aria-label="Raised hand"><img data-src="images/emoji/hands-yellow/raisedhand.webp" data-tone="images/emoji/hands-{t}/raisedhand.webp" alt=""></button>
+      <button type="button" data-emo="raisedbackofhand" aria-label="Raised back of hand"><img data-src="images/emoji/hands-yellow/raisedbackofhand.webp" data-tone="images/emoji/hands-{t}/raisedbackofhand.webp" alt=""></button>
+      <button type="button" data-emo="raisinghands" aria-label="Raising hands"><img data-src="images/emoji/hands-yellow/raisinghands.webp" data-tone="images/emoji/hands-{t}/raisinghands.webp" alt=""></button>
+      <button type="button" data-emo="flexedbiceps" aria-label="Flexed biceps"><img data-src="images/emoji/hands-yellow/flexedbiceps.webp" data-tone="images/emoji/hands-{t}/flexedbiceps.webp" alt=""></button>
+      <button type="button" data-emo="hearthands" aria-label="Heart hands"><img data-src="images/emoji/hands-yellow/hearthands.webp" data-tone="images/emoji/hands-{t}/hearthands.webp" alt=""></button>
+      <button type="button" data-emo="handshake" aria-label="Handshake"><img data-src="images/emoji/hands-yellow/handshake.webp" data-tone="images/emoji/hands-{t}/handshake.webp" alt=""></button>
+      <button type="button" data-emo="foldedhands" aria-label="Folded hands"><img data-src="images/emoji/hands-yellow/foldedhands.webp" data-tone="images/emoji/hands-{t}/foldedhands.webp" alt=""></button>
+      <button type="button" data-emo="pinchedfingers" aria-label="Pinched fingers"><img data-src="images/emoji/hands-yellow/pinchedfingers.webp" data-tone="images/emoji/hands-{t}/pinchedfingers.webp" alt=""></button>
+      <button type="button" data-emo="pinchinghand" aria-label="Pinching hand"><img data-src="images/emoji/hands-yellow/pinchinghand.webp" data-tone="images/emoji/hands-{t}/pinchinghand.webp" alt=""></button>
+      <button type="button" data-emo="handwithindexfingerandthumbcrossed" aria-label="Hand with index finger and thumb crossed"><img data-src="images/emoji/hands-yellow/handwithindexfingerandthumbcrossed.webp" data-tone="images/emoji/hands-{t}/handwithindexfingerandthumbcrossed.webp" alt=""></button>
+      <button type="button" data-emo="indexpointingattheviewer" aria-label="Index pointing at the viewer"><img data-src="images/emoji/hands-yellow/indexpointingattheviewer.webp" data-tone="images/emoji/hands-{t}/indexpointingattheviewer.webp" alt=""></button>
+      <button type="button" data-emo="indexpointingup" aria-label="Index pointing up"><img data-src="images/emoji/hands-yellow/indexpointingup.webp" data-tone="images/emoji/hands-{t}/indexpointingup.webp" alt=""></button>
+      <button type="button" data-emo="backhandindexpointingup" aria-label="Backhand index pointing up"><img data-src="images/emoji/hands-yellow/backhandindexpointingup.webp" data-tone="images/emoji/hands-{t}/backhandindexpointingup.webp" alt=""></button>
+      <button type="button" data-emo="backhandindexpointingdown" aria-label="Backhand index pointing down"><img data-src="images/emoji/hands-yellow/backhandindexpointingdown.webp" data-tone="images/emoji/hands-{t}/backhandindexpointingdown.webp" alt=""></button>
+      <button type="button" data-emo="backhandindexpointingleft" aria-label="Backhand index pointing left"><img data-src="images/emoji/hands-yellow/backhandindexpointingleft.webp" data-tone="images/emoji/hands-{t}/backhandindexpointingleft.webp" alt=""></button>
+      <button type="button" data-emo="backhandindexpointingright" aria-label="Backhand index pointing right"><img data-src="images/emoji/hands-yellow/backhandindexpointingright.webp" data-tone="images/emoji/hands-{t}/backhandindexpointingright.webp" alt=""></button>
+      <button type="button" data-emo="leftwardspushinghand" aria-label="Leftwards pushing hand"><img data-src="images/emoji/hands-yellow/leftwardspushinghand.webp" data-tone="images/emoji/hands-{t}/leftwardspushinghand.webp" alt=""></button>
+      <button type="button" data-emo="rightwardspushinghand" aria-label="Rightwards pushing hand"><img data-src="images/emoji/hands-yellow/rightwardspushinghand.webp" data-tone="images/emoji/hands-{t}/rightwardspushinghand.webp" alt=""></button>
+      <button type="button" data-emo="selfie" aria-label="Selfie"><img data-src="images/emoji/hands-yellow/selfie.webp" data-tone="images/emoji/hands-{t}/selfie.webp" alt=""></button>
+      <div class="emo-head">OTHERS</div>
+      <button type="button" data-emo="personfacepalming" aria-label="Person facepalming"><img data-src="images/emoji/others/personfacepalming-yellow.webp" data-tone="images/emoji/others/personfacepalming-{t}.webp" alt=""></button>
+      <button type="button" data-emo="personshrugging" aria-label="Person shrugging"><img data-src="images/emoji/others/personshrugging-yellow.webp" data-tone="images/emoji/others/personshrugging-{t}.webp" alt=""></button>
+      <button type="button" data-emo="persongesturingno" aria-label="Person gesturing no"><img data-src="images/emoji/others/persongesturingno-yellow.webp" data-tone="images/emoji/others/persongesturingno-{t}.webp" alt=""></button>
+      <button type="button" data-emo="womangesturingno" aria-label="Woman gesturing no"><img data-src="images/emoji/others/womangesturingno-yellow.webp" data-tone="images/emoji/others/womangesturingno-{t}.webp" alt=""></button>
+      <button type="button" data-emo="mangesturingno" aria-label="Man gesturing no"><img data-src="images/emoji/others/mangesturingno-yellow.webp" data-tone="images/emoji/others/mangesturingno-{t}.webp" alt=""></button>
+      <button type="button" data-emo="clinkingbeermugs" aria-label="Clinking beer mugs"><img data-src="images/emoji/others/clinkingbeermugs.webp" alt=""></button>
+      <button type="button" data-emo="partypopper" aria-label="Party popper"><img data-src="images/emoji/others/partypopper.webp" alt=""></button>
+      <button type="button" data-emo="fire" aria-label="Fire"><img data-src="images/emoji/others/fire.webp" alt=""></button>
+      <button type="button" data-emo="glowingstar" aria-label="Glowing star"><img data-src="images/emoji/others/glowingstar.webp" alt=""></button>
+      <button type="button" data-emo="seenoevilmonkey" aria-label="See-no-evil monkey"><img data-src="images/emoji/others/seenoevilmonkey.webp" alt=""></button>
+      <button type="button" data-emo="hearnoevilmonkey" aria-label="Hear-no-evil monkey"><img data-src="images/emoji/others/hearnoevilmonkey.webp" alt=""></button>
+      <button type="button" data-emo="speaknoevilmonkey" aria-label="Speak-no-evil monkey"><img data-src="images/emoji/others/speaknoevilmonkey.webp" alt=""></button>
+      <button type="button" data-emo="ghost" aria-label="Ghost"><img data-src="images/emoji/others/ghost.webp" alt=""></button>
+      <button type="button" data-emo="alien" aria-label="Alien"><img data-src="images/emoji/others/alien.webp" alt=""></button>
+      <button type="button" data-emo="clownface" aria-label="Clown face"><img data-src="images/emoji/others/clownface.webp" alt=""></button>
+      <button type="button" data-emo="skull" aria-label="Skull"><img data-src="images/emoji/others/skull.webp" alt=""></button>
+      <button type="button" data-emo="pileofpoo" aria-label="Pile of poo"><img data-src="images/emoji/others/pileofpoo.webp" alt=""></button>
+      <button type="button" data-emo="hundredpoints" aria-label="Hundred points"><img data-src="images/emoji/others/hundredpoints.webp" alt=""></button>
+      <div class="emo-tones" id="emo-tones" role="group" aria-label="Skin colour">
+        <button type="button" class="emo-tone t-yellow" data-tone="yellow" aria-label="Yellow skin colour"></button>
+        <button type="button" class="emo-tone t-light" data-tone="light" aria-label="Light skin colour"></button>
+        <button type="button" class="emo-tone t-medium-light" data-tone="medium-light" aria-label="Medium light skin colour"></button>
+        <button type="button" class="emo-tone t-medium" data-tone="medium" aria-label="Medium skin colour"></button>
+        <button type="button" class="emo-tone t-medium-dark" data-tone="medium-dark" aria-label="Medium dark skin colour"></button>
+        <button type="button" class="emo-tone t-dark" data-tone="dark" aria-label="Dark skin colour"></button>
+      </div>
+    </div>
+
+    <div id="view-pop" class="pop" hidden>
+      <div class="pop-title">ANGLE</div>
+      <div class="view-row">
+        <input type="range" id="tilt" min="0" max="50" value="18" aria-label="Angle">
+        <span id="tilt-val">18°</span>
+      </div>
+      <div class="pop-title">ZOOM</div>
+      <div class="view-row">
+        <input type="range" id="zoom" min="50" max="100" step="1" value="100" aria-label="Zoom">
+        <span id="zoom-val">100%</span>
+      </div>
+      <div class="pop-title">BRIGHTNESS</div>
+      <div class="view-row">
+        <input type="range" id="bright" min="50" max="150" step="1" value="100" aria-label="Brightness">
+        <span id="bright-val">100%</span>
+      </div>
+      <div class="pop-title">BACKGROUND BRIGHTNESS</div>
+      <div class="view-row">
+        <input type="range" id="bgbright" min="30" max="130" step="1" value="100" aria-label="Background brightness">
+        <span id="bgbright-val">100%</span>
+      </div>
+    </div>
+
+    <div id="graphics-pop" class="pop" hidden>
+      <button type="button" class="big-btn" data-open="themes-pop">THEMES</button>
+      <button type="button" class="big-btn" data-open="background-pop">BACKGROUND</button>
+      <button type="button" class="big-btn" id="btn-captions" aria-pressed="true">CAPTIONS</button>
+    </div>
+
+    <div id="hints-pop" class="pop" hidden>
+      <div class="pop-title">HINTS</div>
+      <div class="hint-row">
+        <button type="button" class="big-btn" id="hints-on">HINTS ON</button>
+        <button type="button" class="big-btn" id="hints-off">HINTS OFF</button>
+      </div>
+      <div class="pop-title">DIRECTIONS</div>
+      <button type="button" class="big-btn dir-btn" id="dir-p1"></button>
+      <button type="button" class="big-btn dir-btn" id="dir-p2"></button>
+    </div>
+
+    <div id="background-pop" class="pop sub-pop" data-back="graphics" hidden>
+      <div class="pop-title">BACKGROUND</div>
+      <div class="scenery-grid" data-pick="bg" id="scenery-row">
+        <button type="button" class="opt tile" data-v="outback"><span class="tile-pic bg-outback"></span><span class="tile-name">Outback</span></button>
+        <button type="button" class="opt tile" data-v="rainforest"><span class="tile-pic bg-rainforest"></span><span class="tile-name">Rainforest</span></button>
+        <button type="button" class="opt tile" data-v="reef"><span class="tile-pic bg-reef"></span><span class="tile-name">Great Barrier Reef</span></button>
+        <button type="button" class="opt tile" data-v="space"><span class="tile-pic bg-space"></span><span class="tile-name">Outer Space</span></button>
+      </div>
+      <button type="button" class="big-btn back">BACK</button>
+    </div>
+
+    <div id="themes-pop" class="pop sub-pop" data-back="graphics" hidden>
+      <div class="pop-title">THEMES</div>
+      <div class="theme-grid" data-pick="theme" id="theme-row"></div>
+      <div class="themes-foot">
+        <button type="button" class="big-btn back">BACK</button>
+        <button type="button" class="big-btn" id="btn-matchbg" aria-pressed="true">MATCH BACKGROUND</button>
+      </div>
+    </div>
+
+    <div id="settings-pop" class="pop panel" hidden>
+      <h2>Settings</h2>
+      <div class="set-body">
+        <div class="set-col set-wide">
+          <div class="sec">Checker speed</div>
+          <div class="row" data-pick="speed">
+            <button type="button" class="opt" data-v="slow">Slow</button>
+            <button type="button" class="opt" data-v="smooth">Smooth</button>
+            <button type="button" class="opt" data-v="fast">Fast</button>
+          </div>
+        </div>
+        <div class="set-col">
+          <div class="sec">Auto bear off</div>
+          <div class="row" data-pick="autoBear">
+            <button type="button" class="opt" data-v="on">ON</button>
+            <button type="button" class="opt" data-v="off">OFF</button>
+          </div>
+        </div>
+        <div class="set-col">
+          <div class="sec">Auto move limited moves</div>
+          <div class="row" data-pick="autoMove">
+            <button type="button" class="opt" data-v="on">ON</button>
+            <button type="button" class="opt" data-v="off">OFF</button>
+          </div>
+        </div>
+        <div class="set-col">
+          <div class="sec">Auto confirm</div>
+          <div class="row" data-pick="autoConfirm">
+            <button type="button" class="opt" data-v="on">ON</button>
+            <button type="button" class="opt" data-v="off">OFF</button>
+          </div>
+        </div>
+        <div class="set-col">
+          <div class="sec">Auto roll <span class="sec-note">(turns Replay off)</span></div>
+          <div class="row" data-pick="autoRoll">
+            <button type="button" class="opt" data-v="on">ON</button>
+            <button type="button" class="opt" data-v="off">OFF</button>
+          </div>
+        </div>
+      </div>
+      <button type="button" class="primary close-pop">Back</button>
+    </div>
+
+    <div id="fly-layer" aria-hidden="true"></div>
+  </div>
+
+  <div id="menu" class="overlay" hidden>
+    <div class="panel menu-box" role="dialog" aria-labelledby="menu-title">
+      <div class="menu-head">
+        <h2 id="menu-title">New Match</h2>
+        <div class="tagline">Set the table, then deal the bones.</div>
+      </div>
+
+      <div class="menu-body">
+      <div class="menu-cell cell-variant">
+      <div class="sec">Rules</div>
+      <div class="row variant-row" data-pick="variant">
+        <button type="button" class="opt" data-v="house">Captain Jacko's House Rules</button>
+      </div>
+      </div>
+
+      <div class="menu-cell cell-opp">
+      <div class="sec">Opponent</div>
+      <div class="opp-row" data-pick="mode">
+        <button type="button" class="opt card" data-v="ai">
+          <svg viewBox="0 0 24 24"><rect x="6.5" y="2.5" width="11" height="19" rx="1.6"/><path d="M9 6.5h6M9 9.5h6M10 13.5h4"/><circle cx="12" cy="17.5" r="1.3" class="fill"/></svg>
+          <span>Play Computer</span>
+        </button>
+        <button type="button" class="opt card" data-v="local">
+          <svg viewBox="0 0 24 24"><circle cx="8" cy="8" r="3"/><path d="M2.5 19c0-3.2 2.5-5.5 5.5-5.5s5.5 2.3 5.5 5.5"/><circle cx="16.5" cy="9" r="2.6"/><path d="M14.8 14.2c.6-.2 1.1-.3 1.7-.3 2.8 0 5 2.1 5 5.1"/></svg>
+          <span>2 Players</span>
+        </button>
+        <button type="button" class="opt card" data-v="online">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.6 3.8 5.6 3.8 9s-1.2 6.4-3.8 9c-2.6-2.6-3.8-5.6-3.8-9S9.4 5.6 12 3z"/></svg>
+          <span>Play a Friend</span>
+        </button>
+      </div>
+      </div>
+
+      <div class="menu-cell cell-ai only-ai">
+        <div class="sec">Computer strength</div>
+        <div class="row" data-pick="ai">
+          <button type="button" class="opt" data-v="easy">Easy</button>
+          <button type="button" class="opt" data-v="hard">Hard</button>
+          <button type="button" class="opt" data-v="expert">Expert</button>
+        </div>
+      </div>
+
+      <div class="menu-cell cell-pts">
+      <div class="sec">Points</div>
+      <div class="chip-row" data-pick="match">
+        <button type="button" class="opt chip" data-v="1">1</button>
+        <button type="button" class="opt chip" data-v="3">3</button>
+        <button type="button" class="opt chip" data-v="5">5</button>
+        <button type="button" class="opt chip" data-v="10">10</button>
+      </div>
+      </div>
+
+      <div class="menu-cell cell-start">
+      <div class="sec">Starting position</div>
+      <div class="row" data-pick="start">
+        <button type="button" class="opt" data-v="classic">Classic</button>
+        <button type="button" class="opt" data-v="fresh">Fresh start</button>
+        <button type="button" class="opt" data-v="tjs">TJ's Way</button>
+      </div>
+      </div>
+
+      <div class="menu-colour">
+        <div class="sec">Player 1 checkers</div>
+        <div class="row colour-row" data-pick="p1col">
+          <button type="button" class="opt colour-btn" data-v="light"><span class="ck-dot light" aria-hidden="true"></span><span>Light</span></button>
+          <button type="button" class="opt colour-btn" data-v="dark"><span class="ck-dot dark" aria-hidden="true"></span><span>Dark</span></button>
+        </div>
+      </div>
+
+      <div class="menu-names">
+        <div class="sec">Player names</div>
+        <div class="row names">
+          <input type="text" id="set-name1" placeholder="Player 1" maxlength="20" autocomplete="off">
+          <input type="text" id="set-name2" placeholder="Player 2" maxlength="20" autocomplete="off">
+        </div>
+      </div>
+
+      <div class="menu-rules">
+        <button type="button" class="opt rules-btn" id="btn-rules" aria-haspopup="dialog" aria-expanded="false" aria-controls="guide">
+          <svg viewBox="0 0 24 24" class="book" aria-hidden="true"><path d="M3.5 5.5c2.8-1 5.5-.8 8.5 1v13c-3-1.8-5.7-2-8.5-1z"/><path d="M20.5 5.5c-2.8-1-5.5-.8-8.5 1v13c3-1.8 5.7-2 8.5-1z"/></svg>
+          <span>Captain Jacko's Guide Book</span>
+        </button>
+      </div>
+      </div>
+
+      <div class="menu-foot">
+        <button type="button" class="ghost" id="btn-menu-back">Back</button>
+        <button type="button" class="ghost exit" id="btn-exit">Exit Game</button>
+        <button type="button" class="ghost" id="btn-saved" aria-haspopup="dialog" aria-controls="saved-pop">Saved Matches</button>
+        <button type="button" class="primary" id="btn-start">Start Game</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="saved-pop" class="overlay" hidden>
+    <div class="panel saved-box" role="dialog" aria-labelledby="saved-title">
+      <div class="menu-head">
+        <h2 id="saved-title">Saved Matches</h2>
+      </div>
+      <div class="saved-list" id="saved-list"></div>
+      <p class="sv-status" id="saved-status" aria-live="polite"></p>
+      <div class="menu-foot">
+        <button type="button" class="ghost" id="saved-back">Back</button>
+        <button type="button" class="ghost" id="saved-load">Load from File</button>
+        <input type="file" id="saved-file" accept=".json,application/json" hidden>
+      </div>
+    </div>
+  </div>
+
+  <div id="saved-ask" class="pop" role="alertdialog" aria-labelledby="saved-ask-title" hidden>
+    <div class="pop-title" id="saved-ask-title">DELETE MATCH</div>
+    <div class="pop-sub">Are you sure?</div>
+    <div class="exit-row">
+      <button type="button" class="big-btn yes" id="saved-yes">YES</button>
+      <button type="button" class="big-btn" id="saved-no">NO</button>
+    </div>
+  </div>
+
+  <div id="friend-pop" class="overlay" data-on="choose" hidden>
+    <div class="panel friend-box" role="dialog" aria-labelledby="friend-title">
+      <div class="menu-head">
+        <h2 id="friend-title">Play a Friend</h2>
+        <div class="tagline">Two devices, one board.</div>
+      </div>
+
+      <div data-screen="choose">
+        <div class="fr-cards">
+          <button type="button" class="opt card" id="fr-make">
+            <svg viewBox="0 0 24 24"><rect x="4" y="10" width="16" height="10" rx="2.5"/><path d="M8 10V7.5a4 4 0 0 1 8 0V10"/><circle cx="12" cy="15" r="1.5" class="fill"/></svg>
+            <span>Create Room</span>
+            <small>Get a code to send</small>
+          </button>
+          <button type="button" class="opt card" id="fr-join">
+            <svg viewBox="0 0 24 24"><path d="M14 4h4.5A1.5 1.5 0 0 1 20 5.5v13a1.5 1.5 0 0 1-1.5 1.5H14"/><path d="M4 12h11"/><path d="M11 8l4 4-4 4"/></svg>
+            <span>Join Room</span>
+            <small>Type your friend's code</small>
+          </button>
+        </div>
+      </div>
+
+      <div data-screen="create" hidden>
+        <div class="sec">Your room code</div>
+        <div class="fr-code" id="fr-code" aria-live="polite"></div>
+        <button type="button" class="opt fr-share" id="fr-share">Copy code</button>
+        <p class="fr-status" id="fr-host-status"></p>
+      </div>
+
+      <div data-screen="join" hidden>
+        <div class="sec">Your friend's room code</div>
+        <input type="text" id="fr-input" class="fr-input" maxlength="12" aria-label="Room code"
+               autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" inputmode="text">
+        <button type="button" class="primary fr-go" id="fr-join-go">Join</button>
+        <p class="fr-status" id="fr-join-status"></p>
+      </div>
+
+      <div data-screen="live" hidden>
+        <div class="fr-tick"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></svg></div>
+        <div class="fr-live-line" id="fr-live-line">Connected</div>
+        <div class="fr-live-name" id="fr-live-name"></div>
+        <div class="fr-live-row">
+          <button type="button" class="ghost" id="fr-leave">Leave Room</button>
+          <button type="button" class="primary" id="fr-play">To the Menu</button>
+        </div>
+      </div>
+
+      <div class="menu-foot">
+        <button type="button" class="ghost" id="fr-back">Back</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="guide" role="dialog" aria-modal="true" aria-labelledby="guide-title" hidden>
+    <div class="gb-book">
+      <div class="gb-top">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 5.5c2.8-1 5.5-.8 8.5 1v13c-3-1.8-5.7-2-8.5-1z"/><path d="M20.5 5.5c-2.8-1-5.5-.8-8.5 1v13c3-1.8 5.7-2 8.5-1z"/></svg>
+        <h2 id="guide-title">Captain Jacko's Guide Book</h2>
+      </div>
+      <div class="gb-tabs" id="guide-tabs" role="group" aria-label="Chapters"></div>
+      <div id="guide-body"></div>
+      <div class="gb-foot">
+        <button type="button" class="ghost" id="guide-close">Back</button>
+        <button type="button" class="ghost" id="guide-credits" aria-pressed="false">Credits</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="install-pop" class="pop" role="dialog" aria-labelledby="install-title" hidden>
+    <div class="pop-title" id="install-title"></div>
+    <div class="install-body" id="install-body"></div>
+    <div class="exit-row">
+      <button type="button" class="big-btn yes" id="install-go">INSTALL GAME</button>
+      <button type="button" class="big-btn" id="install-back" hidden>BACK</button>
+      <button type="button" class="big-btn" id="install-close">PLAY IN THE BROWSER</button>
+    </div>
+  </div>
+
+  <div id="ready-pop" class="pop" role="dialog" aria-labelledby="ready-title" hidden>
+    <div class="pop-title" id="ready-title">READY TO PLAY</div>
+    <div class="pop-sub">Press the Captain Jacko plate at the top to start a new match.</div>
+    <div class="exit-row">
+      <button type="button" class="big-btn yes" id="ready-ok">OK</button>
+    </div>
+  </div>
+
+  <div id="fp-pop" class="pop" role="alertdialog" aria-labelledby="fp-pop-title" hidden>
+    <div class="pop-title" id="fp-pop-title"></div>
+    <div class="pop-sub" id="fp-pop-sub"></div>
+    <div class="exit-row">
+      <button type="button" class="big-btn yes" id="fp-pop-yes"></button>
+      <button type="button" class="big-btn" id="fp-pop-no"></button>
+    </div>
+  </div>
+
+  <div id="chat-pop" class="chat-pop" hidden>
+    <div class="chat-box" role="dialog" aria-labelledby="chat-title">
+      <div class="pop-title chat-title" id="chat-title">CHAT</div>
+      <div class="chat-list" id="chat-list" aria-live="polite"></div>
+      <div class="chat-foot">
+        <input type="text" id="chat-input" class="chat-input" maxlength="200" autocomplete="off"
+               autocapitalize="sentences" spellcheck="true" enterkeyhint="send" aria-label="Message">
+        <div class="chat-row">
+          <button type="button" class="big-btn" id="chat-back">BACK</button>
+          <button type="button" class="big-btn yes" id="chat-send">SEND</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="wait-pop" class="pop" role="alertdialog" aria-labelledby="wait-title" hidden>
+    <div class="pop-title" id="wait-title"></div>
+    <div class="pop-sub" id="wait-sub"></div>
+    <div class="pop-sub wait-line busy" id="wait-line"></div>
+    <div class="exit-row" id="wait-row" hidden>
+      <button type="button" class="big-btn" id="wait-close">CLOSE ROOM</button>
+    </div>
+    <div class="exit-row" id="wait-ask" hidden>
+      <button type="button" class="big-btn yes" id="wait-yes">YES</button>
+      <button type="button" class="big-btn" id="wait-no">NO</button>
+    </div>
+  </div>
+
+  <div id="exit-pop" class="pop" role="alertdialog" aria-labelledby="exit-title" hidden>
+    <div class="pop-title" id="exit-title">EXIT GAME</div>
+    <div class="pop-sub">Are you sure?</div>
+    <div class="exit-row">
+      <button type="button" class="big-btn yes" id="exit-yes">YES</button>
+      <button type="button" class="big-btn" id="exit-no">NO</button>
+    </div>
+  </div>
+  <div id="notice" class="pop" role="status" aria-live="polite" hidden></div>
+  <div id="exit-black" aria-hidden="true"></div>
+
+</body>
+</html>
